@@ -29,3 +29,32 @@ exports.postUser = async (req, res) => {
     res.json({ msg: false });
   }
 };
+
+exports.getUser = async (req, res) => {
+  try {
+    if (req.user) {
+      console.log("user already exists");
+      res.json({ msg: false, msgText: "user exists" });
+    }
+    console.log(req.body);
+    const email = req.body.email;
+    const password = req.body.password;
+    const userExists = await User.findAll({ where: { email: email } });
+    const user = userExists[0];
+    console.log(user.password, password);
+    if (!userExists) {
+      res.json({ msg: false, msgText: "no user exists" });
+      return;
+    }
+    // console.log(user.password === password);
+    if (user.password !== password) {
+      res.json({ msg: false, msgText: "check password" });
+      return;
+    }
+    req.user = user;
+    res.json({ user, msg: true });
+  } catch (err) {
+    console.log(err);
+    res.json({ msg: false, err });
+  }
+};
