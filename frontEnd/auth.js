@@ -12,6 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   //   console.log(authPage);
 });
+
 async function addUser(e) {
   e.preventDefault();
   const username = document.getElementById("username").value;
@@ -44,6 +45,8 @@ async function getUser(e) {
   e.preventDefault();
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+  // console.log(window.location);
+
   if (!email || !password) {
     sendMessage("input required");
     return;
@@ -53,23 +56,14 @@ async function getUser(e) {
       email,
       password,
     });
-    // console.log(result.data);
-    if (result.status === 404) {
-      sendMessage("user doesnt exists");
-      return;
-    }
-    if (result.status === 401) {
-      sendMessage("check password");
-      return;
-    }
-    // if (!result.data.msg) {
-    //   alert("check for pass or username is not valid");
-    //   return;
-    // }
     sendMessage("ur logged in");
+    window.location.replace(
+      "file:///C:/Users/roshi/Desktop/backendSharpener/expenseTracker/frontEnd/home.html?expense=100&description=movie&category=Entertainment#"
+    );
     console.log(result.data);
   } catch (err) {
     console.log(err);
+    sendMessage("check pass or userid");
     return;
   }
 }

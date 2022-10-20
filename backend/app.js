@@ -4,6 +4,7 @@ dotenv.config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+
 const bcrypt = require("bcrypt");
 
 const app = express();
@@ -16,11 +17,16 @@ const sequelize = require("./util/database");
 
 //routers
 const authRoutes = require("./routes/authRoutes");
+const expenseRoutes = require("./routes/expenseRoute");
 
 //exporting models
 const User = require("./models/User");
+const Expense = require("./models/Expense");
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 app.use("/", authRoutes);
+app.use("/", expenseRoutes);
 
 sequelize
   .sync()

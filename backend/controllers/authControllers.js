@@ -43,11 +43,11 @@ exports.getUser = async (req, res) => {
     }
     // console.log(req.body);
     const email = req.body.email;
-    const password = JSON.stringify(req.body.password);
+    const password = req.body.password;
     const userExists = await User.findAll({ where: { email: email } });
     const user = userExists[0];
-    // console.log(user.password, password);
-    if (!userExists) {
+    //console.log(user.password, password);
+    if (!user) {
       res.status(404).json({ msg: false, msgText: "no user exists" });
       return;
     }
@@ -58,7 +58,6 @@ exports.getUser = async (req, res) => {
     // }
     //comparing password
     const result = await bcrypt.compare(password, user.password);
-    //console.log(result);
     if (!result) {
       res.status(401).json({ msg: false, msgText: "check password" });
       return;
