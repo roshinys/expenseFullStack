@@ -1,11 +1,16 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const saltRounds = 8;
 
 exports.postUser = async (req, res) => {
   //   console.log(req.body);
   try {
     const username = req.body.username;
     const email = req.body.email;
-    const password = req.body.password;
+    if (!email.includes("@")) {
+      throw new Error("not a valid email");
+    }
+    const password = JSON.stringify(req.body.password);
     // console.log(username, email, password);
     if (!username || !email || !password) {
       throw new Error("input needed backend");
@@ -15,14 +20,14 @@ exports.postUser = async (req, res) => {
       res.json({ msg: false, msgtext: "already logged in" });
       return;
     }
-    // console.log("lets c");
-    // console.log(username, email, password);
+    // console.log(password);
+    const hashPass = await bcrypt.hash(password, saltRounds);
     const newuser = await User.create({
       username: username,
       email: email,
-      password: password,
+      password: hashPass,
     });
-    res.user = newuser;
+    req.user = newuser;
     res.json({ newuser, msg: true });
   } catch (err) {
     console.log(err);
@@ -38,7 +43,7 @@ exports.getUser = async (req, res) => {
     }
     // console.log(req.body);
     const email = req.body.email;
-    const password = req.body.password;
+    const password = JSON.stringify(req.body.password);
     const userExists = await User.findAll({ where: { email: email } });
     const user = userExists[0];
     // console.log(user.password, password);
@@ -47,7 +52,14 @@ exports.getUser = async (req, res) => {
       return;
     }
     // console.log(user.password === password);
-    if (user.password !== password) {
+    // if (user.password !== password) {
+    //   res.status(401).json({ msg: false, msgText: "check password" });
+    //   return;
+    // }
+    //comparing password
+    const result = await bcrypt.compare(password, user.password);
+    //console.log(result);
+    if (!result) {
       res.status(401).json({ msg: false, msgText: "check password" });
       return;
     }

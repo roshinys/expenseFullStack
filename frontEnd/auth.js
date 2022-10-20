@@ -18,7 +18,8 @@ async function addUser(e) {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   if (!username || !email || !password) {
-    console.log("input required");
+    //console.log("input required");
+    sendMessage("input required");
     return;
   }
   try {
@@ -29,7 +30,7 @@ async function addUser(e) {
     });
     // console.log(result.data);
     if (!result.data.msg) {
-      console.log("smtg went wrong or check email");
+      sendMessage("check email");
       return;
     }
     console.log(result.data);
@@ -44,7 +45,7 @@ async function getUser(e) {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   if (!email || !password) {
-    console.log("input required");
+    sendMessage("input required");
     return;
   }
   try {
@@ -54,21 +55,33 @@ async function getUser(e) {
     });
     // console.log(result.data);
     if (result.status === 404) {
-      alert("user doesnt exists");
+      sendMessage("user doesnt exists");
       return;
     }
     if (result.status === 401) {
-      alert("check password");
+      sendMessage("check password");
       return;
     }
     // if (!result.data.msg) {
     //   alert("check for pass or username is not valid");
     //   return;
     // }
-    alert("ur logged in");
+    sendMessage("ur logged in");
     console.log(result.data);
   } catch (err) {
     console.log(err);
     return;
   }
+}
+
+function sendMessage(msg) {
+  const panelContainer = document.getElementsByClassName("panel-container")[0];
+  const message = document.createElement("div");
+  message.className = "message";
+  message.innerHTML = `<h1>${msg}</h1`;
+  panelContainer.appendChild(message);
+  //console.log(panelContainer);
+  setTimeout(() => {
+    message.remove();
+  }, 2000);
 }
