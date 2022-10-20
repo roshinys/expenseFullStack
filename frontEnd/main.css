@@ -147,8 +147,13 @@ form {
     background-position: auto;
   }
   .input-field {
+    display: flex;
     width: 200px;
-    height: 30px;
+    height: 40px;
+    align-items: center;
+  }
+  .input-field input {
+    margin-left: 5px;
   }
   .social-icon {
     width: 35px;

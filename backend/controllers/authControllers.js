@@ -36,19 +36,19 @@ exports.getUser = async (req, res) => {
       console.log("user already exists");
       res.json({ msg: false, msgText: "user exists" });
     }
-    console.log(req.body);
+    // console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
     const userExists = await User.findAll({ where: { email: email } });
     const user = userExists[0];
-    console.log(user.password, password);
+    // console.log(user.password, password);
     if (!userExists) {
-      res.json({ msg: false, msgText: "no user exists" });
+      res.status(404).json({ msg: false, msgText: "no user exists" });
       return;
     }
     // console.log(user.password === password);
     if (user.password !== password) {
-      res.json({ msg: false, msgText: "check password" });
+      res.status(401).json({ msg: false, msgText: "check password" });
       return;
     }
     req.user = user;

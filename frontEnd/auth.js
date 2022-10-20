@@ -53,10 +53,18 @@ async function getUser(e) {
       password,
     });
     // console.log(result.data);
-    if (!result.data.msg) {
-      alert("check for pass or username is not valid");
+    if (result.status === 404) {
+      alert("user doesnt exists");
       return;
     }
+    if (result.status === 401) {
+      alert("check password");
+      return;
+    }
+    // if (!result.data.msg) {
+    //   alert("check for pass or username is not valid");
+    //   return;
+    // }
     alert("ur logged in");
     console.log(result.data);
   } catch (err) {
