@@ -157,6 +157,38 @@ form {
 .panel-container h1 {
   font-size: 15px;
 }
+#forgot-password {
+  width: max-content;
+  padding: 0 10px;
+}
+.form-forgotpass {
+  display: none;
+}
+.form-forgotpass.active {
+  display: flex;
+  position: fixed;
+  top: 2%;
+  left: 35%;
+  background-color: var(--luffy);
+  flex-direction: column;
+  padding: auto;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+.form-forgotpass h1 {
+  margin: auto;
+  padding: 10px 0;
+}
+
+.form-exit {
+  position: relative;
+  top: 20%;
+  right: -40%;
+  width: 15px;
+  height: 20px;
+  background-color: black;
+}
 
 /* mobile */
 

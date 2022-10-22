@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const saltRounds = 8;
 
+exports.changePass = async (req, res) => {
+  res.json({ msg: "ready to change pass?" });
+};
+
 exports.postUser = async (req, res) => {
   //   console.log(req.body);
   try {

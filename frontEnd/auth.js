@@ -1,6 +1,6 @@
 const authButton =
   document.getElementById("register") || document.getElementById("login");
-
+const forgotpass = document.getElementById("forgot-password");
 window.addEventListener("DOMContentLoaded", () => {
   const pageUrl = window.location.href;
   const page = pageUrl.split("/");
@@ -10,7 +10,28 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     authButton.addEventListener("click", getUser);
   }
+  forgotpass.addEventListener("click", changepass);
 });
+
+function changepass() {
+  // console.log("oke lets c");
+  document.getElementsByClassName("form-forgotpass")[0].classList.add("active");
+  document
+    .getElementsByClassName("form-exit")[0]
+    .addEventListener("click", () => {
+      document
+        .getElementsByClassName("form-forgotpass")[0]
+        .classList.remove("active");
+    });
+  document.getElementById("change-pass").addEventListener("click", newpass);
+}
+
+async function newpass(e) {
+  e.preventDefault();
+  // console.log("he pressed it ");
+  const result = await axios.post("http://localhost:3000/changepass");
+  console.log(result);
+}
 
 async function addUser(e) {
   e.preventDefault();
