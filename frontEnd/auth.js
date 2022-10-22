@@ -10,7 +10,6 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     authButton.addEventListener("click", getUser);
   }
-  //   console.log(authPage);
 });
 
 async function addUser(e) {
@@ -21,7 +20,7 @@ async function addUser(e) {
   if (!username || !email || !password) {
     //console.log("input required");
     sendMessage("input required");
-    return;
+    return false;
   }
   try {
     const result = await axios.post("http://localhost:3000/postUser", {
@@ -32,39 +31,44 @@ async function addUser(e) {
     // console.log(result.data);
     if (!result.data.msg) {
       sendMessage("check email");
-      return;
+      return false;
     }
     console.log(result.data);
+    return true;
   } catch (err) {
     console.log(err);
-    return;
+    return false;
   }
 }
 
 async function getUser(e) {
   e.preventDefault();
+  const loginbtn = document.getElementById("login");
+  console.log(loginbtn);
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   // console.log(window.location);
 
   if (!email || !password) {
     sendMessage("input required");
-    return;
+    return false;
   }
   try {
     const result = await axios.post("http://localhost:3000/getUser", {
       email,
       password,
     });
-    sendMessage("ur logged in");
-    window.location.replace(
-      "file:///C:/Users/roshi/Desktop/backendSharpener/expenseTracker/frontEnd/home.html?expense=100&description=movie&category=Entertainment#"
-    );
+    console.log(result);
+    sendMessage(result.data.msg);
+    localStorage.setItem("token", result.data.token);
+    window.location.href =
+      "file:///C:/Users/roshi/Desktop/backendSharpener/expenseTracker/frontEnd/home.html";
     console.log(result.data);
+    return;
   } catch (err) {
     console.log(err);
-    sendMessage("check pass or userid");
-    return;
+    sendMessage("smtg wrong dude");
+    return true;
   }
 }
 

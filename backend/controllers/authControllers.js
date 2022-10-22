@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const saltRounds = 8;
 
 exports.postUser = async (req, res) => {
@@ -36,36 +37,39 @@ exports.postUser = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
+  const { email, password } = req.body;
+  console.log(password);
   try {
-    if (req.user) {
-      console.log("user already exists");
-      res.json({ msg: false, msgText: "user exists" });
-    }
     // console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
-    const userExists = await User.findAll({ where: { email: email } });
-    const user = userExists[0];
+    const user = await User.findAll({ where: { email: email } });
     //console.log(user.password, password);
-    if (!user) {
+    if (user.length === 0) {
       res.status(404).json({ msg: false, msgText: "no user exists" });
       return;
     }
-    // console.log(user.password === password);
-    // if (user.password !== password) {
-    //   res.status(401).json({ msg: false, msgText: "check password" });
-    //   return;
-    // }
-    //comparing password
-    const result = await bcrypt.compare(password, user.password);
+    // console.log(password, user.password, user);
+    const result = await bcrypt.compare(password, user[0].password);
+    console.log(result);
     if (!result) {
       res.status(401).json({ msg: false, msgText: "check password" });
       return;
     }
-    req.user = user;
-    res.json({ user, msg: true });
+    const userId = user[0].id;
+    // console.log(user[0].id);
+    const jwttoken = generateToken(userId);
+    res.json({
+      token: jwttoken,
+      success: true,
+      msg: "Successfully Logged In",
+    });
   } catch (err) {
     console.log(err);
     res.json({ msg: false, err });
   }
 };
+
+function generateToken(id) {
+  return jwt.sign(id, process.env.PRIVATEKEY);
+}
