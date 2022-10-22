@@ -6,7 +6,7 @@ const authenticate = (req, res, next) => {
     const token = req.header("Authorization");
     // console.log("toker is=====> ", token);
     const userid = Number(jwt.verify(token, process.env.PRIVATEKEY));
-    console.log("userid is ===>", userid);
+    // console.log("userid is ===>", userid);
     User.findByPk(userid)
       .then((user) => {
         console.log(JSON.stringify(user));

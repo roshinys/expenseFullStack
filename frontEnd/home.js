@@ -3,6 +3,7 @@ const token = localStorage.getItem("token");
 
 window.addEventListener("DOMContentLoaded", () => {
   getAllExpense();
+  isPremUser();
   var addExpenseButton = document.getElementById("add-expense");
   const btnchange = document.getElementsByClassName("change");
   // console.log(btnchange);
@@ -12,6 +13,58 @@ window.addEventListener("DOMContentLoaded", () => {
   // console.log(addExpenseButton);
   addExpenseButton.addEventListener("click", addExpense);
 });
+
+async function isPremUser() {
+  try {
+    const result = await axios.get("http://localhost:3000/", {
+      headers: { Authorization: token },
+    });
+    // console.log(result);
+    const prem = result.data.isPrem || false;
+    console.log(prem);
+    if (!prem) {
+      throw new Error("not a premium user");
+    }
+    document.getElementsByClassName("prem-features")[0].classList.add("active");
+    const response = await axios.get("http://localhost:3000/usersExpense", {
+      headers: { Authorization: token },
+    });
+    // console.log(response.data);
+    const userExpenses = response.data.userExpense;
+    userExpenses.forEach((oneuser) => {
+      addtoLeaderboard(oneuser);
+    });
+    const leaderboardusers =
+      document.getElementsByClassName("leaderboard-users");
+    for (let i = 0; i < leaderboardusers.length; i++) {
+      leaderboardusers[i].addEventListener("click", getSpecificUser);
+    }
+    // addtoLeaderboard(userExpenses);
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+}
+async function getSpecificUser(e) {
+  // console.log(e.target);
+  const id = e.target.id;
+  // console.log(id)
+  const response = await axios.get(`http://localhost:3000/user-expense/${id}`, {
+    headers: { Authorization: token },
+  });
+  console.log(response.data);
+  // /user-expense/:userid
+}
+
+function addtoLeaderboard(oneuser) {
+  const leaderboardhtml = document.getElementsByClassName("leaderboard")[0];
+  // console.log(leaderboardhtml);
+  const childhtml = `<tr>
+            <th><button class="leaderboard-users" id=${oneuser.id}>${oneuser.username}</button></th>
+            <th>${oneuser.total}</th>
+          </tr>`;
+  leaderboardhtml.innerHTML = leaderboardhtml.innerHTML + childhtml;
+}
 
 async function addExpense() {
   try {

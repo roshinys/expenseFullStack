@@ -6,6 +6,20 @@ const expenseContollers = require("../controllers/expenseControllers");
 const middleware = require("../middleware/auth");
 
 router.get(
+  "/user-expense/:userid",
+  middleware.authenticate,
+  expenseContollers.getOneUser
+);
+
+router.get("/", middleware.authenticate, expenseContollers.isPremUser);
+
+router.get(
+  "/usersExpense",
+  middleware.authenticate,
+  expenseContollers.usersExpense
+);
+
+router.get(
   "/getExpenses",
   middleware.authenticate,
   expenseContollers.getExpenses
