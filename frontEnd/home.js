@@ -31,6 +31,7 @@ async function isPremUser() {
     });
     // console.log(response.data);
     const userExpenses = response.data.userExpense;
+    document.getElementsByClassName("leaderboard")[0].innerHTML = "";
     userExpenses.forEach((oneuser) => {
       addtoLeaderboard(oneuser);
     });
@@ -53,7 +54,19 @@ async function getSpecificUser(e) {
     headers: { Authorization: token },
   });
   console.log(response.data);
-  // /user-expense/:userid
+  const expenses = response.data.expense;
+  document.getElementsByClassName("modal")[0].classList.add("active");
+  const modalContainer = document.getElementsByClassName("modal-items")[0];
+  expenses.forEach((expense) => {
+    const newdiv = `<div class="modal-expense-items"><span>${expense.expense}</span>
+            <span>${expense.description}</span>
+            <span>${expense.category}</span></div>`;
+    modalContainer.innerHTML = modalContainer.innerHTML + newdiv;
+  });
+  document.getElementsByClassName("modal-exit")[0].onclick = function () {
+    document.getElementsByClassName("modal")[0].classList.remove("active");
+    modalContainer.innerHTML = "";
+  };
 }
 
 function addtoLeaderboard(oneuser) {
@@ -89,6 +102,7 @@ async function addExpense() {
     addexpensehtml(result.data.newExpense.id, expense, category, description);
     const totalhtml = document.getElementsByClassName("expense-total")[0];
     totalhtml.innerText = `Total = ${total}`;
+    isPremUser();
     return;
   } catch (err) {
     console.log(err);
@@ -128,6 +142,7 @@ async function changeItem(e) {
     );
     // console.log(result);
     removeItem(delId);
+    isPremUser();
   } catch (err) {
     console.log(err);
   }

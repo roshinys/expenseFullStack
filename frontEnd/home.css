@@ -204,3 +204,40 @@ th {
   margin: 0 20px;
   padding: 0 20px;
 }
+
+.modal {
+  display: none;
+}
+.modal.active {
+  display: flex;
+  position: fixed;
+  top: 25%;
+  left: 30%;
+  background-color: var(--luffy);
+  width: 50vw;
+  height: 50vh;
+  justify-content: center;
+  align-items: space-around;
+}
+.modal.active h1 {
+  text-align: center;
+}
+.modal-exit {
+  position: fixed;
+  left: 75%;
+  top: 25%;
+  width: 10px;
+  height: 10px;
+}
+.modal-exit:hover {
+  background-color: black;
+  cursor: pointer;
+}
+.modal-expense-items {
+  display: flex;
+  /* flex-direction: row; */
+}
+.modal-expense-items span {
+  display: inline;
+  margin: 0 30px;
+}
