@@ -28,9 +28,15 @@ function changepass() {
 
 async function newpass(e) {
   e.preventDefault();
+  const forgotemail = document.getElementById("forgotemail").value;
   // console.log("he pressed it ");
-  const result = await axios.post("http://localhost:3000/changepass");
+  const result = await axios.post("http://localhost:3000/forgotpass", {
+    email: forgotemail,
+  });
   console.log(result);
+  if (result.data.link) {
+    alert(`pass link = ${result.data.link}`);
+  }
 }
 
 async function addUser(e) {
@@ -84,7 +90,8 @@ async function getUser(e) {
     localStorage.setItem("token", result.data.token);
     window.location.href =
       "file:///C:/Users/roshi/Desktop/backendSharpener/expenseTracker/frontEnd/home.html";
-    console.log(result.data);
+    // console.log(result.data);
+
     return;
   } catch (err) {
     console.log(err);

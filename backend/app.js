@@ -19,11 +19,13 @@ const sequelize = require("./util/database");
 const authRoutes = require("./routes/authRoutes");
 const expenseRoutes = require("./routes/expenseRoute");
 const purchaseRoutes = require("./routes/purchaseRoutes");
+const forgotpassRoutes = require("./routes/resetPassRoute");
 
 //exporting models
 const User = require("./models/User");
 const Expense = require("./models/Expense");
 const Order = require("./models/Order");
+const ForgotPass = require("./models/ForgotPass");
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -31,9 +33,13 @@ Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 
+User.hasMany(ForgotPass);
+ForgotPass.belongsTo(User);
+
 app.use("/", authRoutes);
 app.use("/", expenseRoutes);
 app.use("/purchase", purchaseRoutes);
+app.use("/", forgotpassRoutes);
 
 sequelize
   .sync()

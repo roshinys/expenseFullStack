@@ -3,10 +3,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const saltRounds = 8;
 
-exports.changePass = async (req, res) => {
-  res.json({ msg: "ready to change pass?" });
-};
-
 exports.postUser = async (req, res) => {
   //   console.log(req.body);
   try {
@@ -27,6 +23,7 @@ exports.postUser = async (req, res) => {
     }
     // console.log(password);
     const hashPass = await bcrypt.hash(password, saltRounds);
+    console.log(hashPass);
     const newuser = await User.create({
       username: username,
       email: email,
@@ -46,13 +43,14 @@ exports.getUser = async (req, res) => {
   try {
     // console.log(req.body);
     const email = req.body.email;
-    const password = req.body.password;
+    const password = JSON.stringify(req.body.password);
     const user = await User.findAll({ where: { email: email } });
     //console.log(user.password, password);
     if (user.length === 0) {
       res.status(404).json({ msg: false, msgText: "no user exists" });
       return;
     }
+
     // console.log(password, user.password, user);
     const result = await bcrypt.compare(password, user[0].password);
     console.log(result);
