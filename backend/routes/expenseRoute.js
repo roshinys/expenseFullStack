@@ -35,4 +35,10 @@ router.delete(
   expenseContollers.deleteExpense
 );
 
+router.get(
+  "/downloadExpense",
+  middleware.authenticate,
+  expenseContollers.downloadExpense
+);
+
 module.exports = router;

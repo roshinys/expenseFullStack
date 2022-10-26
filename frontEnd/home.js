@@ -40,12 +40,34 @@ async function isPremUser() {
     for (let i = 0; i < leaderboardusers.length; i++) {
       leaderboardusers[i].addEventListener("click", getSpecificUser);
     }
+    document.body.innerHTML =
+      document.body.innerHTML +
+      `<button class="download-prem">download</button>`;
+    document
+      .getElementsByClassName("download-prem")[0]
+      .addEventListener("click", downloadfile);
     // addtoLeaderboard(userExpenses);
   } catch (err) {
     console.log(err);
     return;
   }
 }
+
+async function downloadfile() {
+  try {
+    const response = await axios.get("http://localhost:3000/downloadExpense", {
+      headers: { Authorization: token },
+    });
+    console.log(response.data);
+    var a = document.createElement("a");
+    a.href = response.data.fileurl;
+    a.download = "myexpense.csv";
+    a.click();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 async function getSpecificUser(e) {
   // console.log(e.target);
   const id = e.target.id;
