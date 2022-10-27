@@ -6,7 +6,7 @@ const AWS = require("aws-sdk");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-const expensePerPage = 2;
+var expensePerPage = 2;
 
 async function uploadtos3(data, filename) {
   const BucketName = process.env.BUCKETNAME;
@@ -68,6 +68,10 @@ exports.getExpenses = async (req, res) => {
   try {
     // const users = await User.findByPk(1)
     // console.log(req.user);
+
+    const quantity = parseInt(req.query.quantity);
+
+    console.log("expense per page is ----->", expensePerPage);
     let page = req.query.page || 1;
     let hasPrev = true;
     let hasNext = true;
@@ -75,12 +79,21 @@ exports.getExpenses = async (req, res) => {
       page = 1;
       hasPrev = false;
     }
-    const expenses = await req.user.getExpenses({
-      offset: (page - 1) * expensePerPage,
-      limit: expensePerPage,
+    const result = await Expense.findAndCountAll({
+      where: {
+        userId: req.user.id,
+      },
+      offset: (page - 1) * quantity,
+      limit: quantity,
     });
-    // console.log(expenses.length);
-    if (expenses.length != expensePerPage) {
+    const expenses = result.rows;
+    const count = result.count;
+    // const expenses = await req.user.getExpenses({
+    //   offset: (page - 1) * quantity,
+    //   limit: quantity,
+    // });
+    console.log("ok qty =>", count / quantity);
+    if (parseInt(count / quantity) == page) {
       hasNext = false;
     }
     res.json({ expenses, msg: true, hasPrev, hasNext, page });

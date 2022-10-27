@@ -8,6 +8,11 @@
   --luffy: #e0144c;
   --black: #000000;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* -webkit-appearance: none; */
+  margin: 0;
+}
 body {
   background-color: #000000;
   color: white;
@@ -271,6 +276,16 @@ th {
 .pagination-button.active {
   background-color: var(--luffy);
   color: white;
+}
+#expense-per-page-input {
+  display: flex;
+}
+#expense-per-page-input input[type="number"] {
+  width: max-content;
+  border: none;
+  background: none;
+  color: white;
+  border-bottom: 1px solid var(--luffy);
 }
 
 @media (max-width: 600px) {

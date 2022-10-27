@@ -12,6 +12,14 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   // console.log(addExpenseButton);
   addExpenseButton.addEventListener("click", addExpense);
+  const quantity = document.getElementById("expense-quantity");
+  if (!localStorage.getItem("quantity")) {
+    localStorage.setItem("quantity", 2);
+  }
+  quantity.value = localStorage.getItem("quantity") || 2;
+  quantity.addEventListener("change", (e) => {
+    localStorage.setItem("quantity", e.target.value);
+  });
 });
 
 async function isPremUser() {
@@ -117,7 +125,7 @@ async function addExpense() {
         headers: { Authorization: token },
       }
     );
-    console.log(result);
+    // console.log(result);
     addexpensehtml(result.data.newExpense.id, expense, category, description);
     const totalhtml = document.getElementsByClassName("expense-total")[0];
     totalhtml.innerText = `Total = ${total}`;
@@ -131,20 +139,21 @@ async function addExpense() {
 async function getAllExpense(e) {
   try {
     let page = 1;
+    let quantity = localStorage.getItem("quantity") || 2;
     if (e) {
-      console.log(e.target);
+      // console.log(e.target);
       page = e.target.id;
       // console.log(page);
     }
-
+    console.log("quantity is ", quantity);
     const token = localStorage.getItem("token");
     const result = await axios.get(
-      `http://localhost:3000/getExpenses?page=${page}`,
+      `http://localhost:3000/getExpenses?page=${page}&quantity=${quantity}`,
       {
         headers: { Authorization: token },
       }
     );
-    // console.log(result.data);
+    // console.log(result);
     page = parseInt(result.data.page);
     // result.data.hasNext = false;
     const pagination = document.getElementById("pagination");
