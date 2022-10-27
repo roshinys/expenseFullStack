@@ -128,13 +128,45 @@ async function addExpense() {
     return;
   }
 }
-async function getAllExpense() {
+async function getAllExpense(e) {
   try {
+    let page = 1;
+    if (e) {
+      console.log(e.target);
+      page = e.target.id;
+      // console.log(page);
+    }
+
     const token = localStorage.getItem("token");
-    const result = await axios.get("http://localhost:3000/getExpenses", {
-      headers: { Authorization: token },
-    });
-    // console.log(result);
+    const result = await axios.get(
+      `http://localhost:3000/getExpenses?page=${page}`,
+      {
+        headers: { Authorization: token },
+      }
+    );
+    // console.log(result.data);
+    page = parseInt(result.data.page);
+    // result.data.hasNext = false;
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = `<button id="${
+      page - 1
+    }" class="pagination-button">${page - 1}</button>
+              <button id="${page}" class="pagination-button active">${page}</button>
+              <button id="${page + 1}" class="pagination-button">${
+      page + 1
+    }</button>`;
+    if (page == 1 || !result.data.hasPrev) {
+      const firtsC = pagination.firstElementChild;
+      pagination.removeChild(firtsC);
+    }
+    if (!result.data.hasNext) {
+      const lastC = pagination.lastElementChild;
+      pagination.removeChild(lastC);
+    }
+    // console.log(pagination.children.length);
+    for (let i = 0; i < pagination.children.length; i++) {
+      pagination.children[i].addEventListener("click", getAllExpense);
+    }
     const expenses = result.data.expenses;
     expensehtml(expenses);
     const totalhtml = document.getElementsByClassName("expense-total")[0];
@@ -168,6 +200,9 @@ async function changeItem(e) {
 }
 
 function expensehtml(expenses) {
+  const expenseItems = document.getElementsByClassName("expense-items")[0];
+  expenseItems.innerHTML = "";
+  total = 0;
   expenses.forEach((element) => {
     addexpensehtml(
       element.id,

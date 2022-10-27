@@ -6,6 +6,8 @@ const AWS = require("aws-sdk");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
+const expensePerPage = 2;
+
 async function uploadtos3(data, filename) {
   const BucketName = process.env.BUCKETNAME;
   const IAMUSERKEY = process.env.IAMUSERKEY;
@@ -66,8 +68,22 @@ exports.getExpenses = async (req, res) => {
   try {
     // const users = await User.findByPk(1)
     // console.log(req.user);
-    const expenses = await req.user.getExpenses();
-    res.json({ expenses, msg: true });
+    let page = req.query.page || 1;
+    let hasPrev = true;
+    let hasNext = true;
+    if (page == 1) {
+      page = 1;
+      hasPrev = false;
+    }
+    const expenses = await req.user.getExpenses({
+      offset: (page - 1) * expensePerPage,
+      limit: expensePerPage,
+    });
+    // console.log(expenses.length);
+    if (expenses.length != expensePerPage) {
+      hasNext = false;
+    }
+    res.json({ expenses, msg: true, hasPrev, hasNext, page });
   } catch (err) {
     console.log(err);
     res.status(401).send({ msg: false });

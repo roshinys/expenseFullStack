@@ -54,7 +54,7 @@ body {
   /* color: var(--luffy); */
   display: grid;
   grid-template-columns: 30% 70%;
-  height: 70vh;
+  /* height: 70vh; */
   color: var(--luffy);
   padding: 15px;
 }
@@ -251,6 +251,26 @@ th {
 }
 .download-prem.active {
   display: flex;
+}
+
+#pagination {
+  display: flex;
+  /* background-color: aqua; */
+  align-items: center;
+  justify-content: center;
+}
+.pagination-button {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  border-radius: 0;
+  background-color: black;
+  border: none;
+}
+
+.pagination-button.active {
+  background-color: var(--luffy);
+  color: white;
 }
 
 @media (max-width: 600px) {
