@@ -75,20 +75,23 @@ exports.getExpenses = async (req, res) => {
 };
 
 exports.postExpense = async (req, res) => {
-  // res.json("ok am workin");
-  // return;
-  // const users = await User.findByPk(1);
-  const expense = req.body.expense;
-  const description = req.body.description;
-  const category = req.body.category;
-  // console.log(req.user);
-  const newExpense = await req.user.createExpense({
-    expense: expense,
-    description: description,
-    category: category,
-  });
-  // console.log(expense, description, category, newExpense);
-  res.json({ newExpense });
+  console.log("ok");
+  try {
+    const expense = req.body.expense;
+    const description = req.body.description;
+    const category = req.body.category;
+    console.log(req.user);
+    const newExpense = await req.user.createExpense({
+      expense: expense,
+      description: description,
+      category: category,
+    });
+    // console.log(expense, description, category, newExpense);
+    res.json({ msg: true, newExpense });
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ msg: false });
+  }
 };
 
 exports.deleteExpense = async (req, res) => {

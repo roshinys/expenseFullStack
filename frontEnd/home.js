@@ -1,11 +1,11 @@
 var total = 0;
 const token = localStorage.getItem("token");
+var addExpenseButton = document.getElementById("add-expense");
 
 window.addEventListener("DOMContentLoaded", () => {
   getAllExpense();
   isPremUser();
-  var addExpenseButton = document.getElementById("add-expense");
-  const btnchange = document.getElementsByClassName("change");
+  const btnchange = document.getElementsByClassName("changex");
   // console.log(btnchange);
   for (let i = 0; i < btnchange.length; i++) {
     btnchange.addEventListener("click", changeItem);
@@ -21,7 +21,7 @@ async function isPremUser() {
     });
     // console.log(result);
     const prem = result.data.isPrem || false;
-    console.log(prem);
+    console.log("is prem user ?", prem);
     if (!prem) {
       throw new Error("not a premium user");
     }
@@ -40,12 +40,10 @@ async function isPremUser() {
     for (let i = 0; i < leaderboardusers.length; i++) {
       leaderboardusers[i].addEventListener("click", getSpecificUser);
     }
-    document.body.innerHTML =
-      document.body.innerHTML +
-      `<button class="download-prem">download</button>`;
-    document
-      .getElementsByClassName("download-prem")[0]
-      .addEventListener("click", downloadfile);
+    const downloadfile = document.getElementsByClassName("download-prem")[0];
+    downloadfile.classList.add("active");
+    // console.log(downloadfile);
+    downloadfile.addEventListener("click", downloadfile);
     // addtoLeaderboard(userExpenses);
   } catch (err) {
     console.log(err);
@@ -106,8 +104,7 @@ async function addExpense() {
     var expense = document.getElementById("expense").value;
     var description = document.getElementById("description").value;
     var category = document.getElementById("category").value;
-
-    //   console.log(expense, description, category);
+    console.log(expense, description, category);
     const token = localStorage.getItem("token");
     const result = await axios.post(
       "http://localhost:3000/postExpense",
@@ -120,7 +117,7 @@ async function addExpense() {
         headers: { Authorization: token },
       }
     );
-    // console.log(result);
+    console.log(result);
     addexpensehtml(result.data.newExpense.id, expense, category, description);
     const totalhtml = document.getElementsByClassName("expense-total")[0];
     totalhtml.innerText = `Total = ${total}`;
@@ -187,7 +184,7 @@ function addexpensehtml(id, expense, category, description) {
   // console.log(expenseItems);
   const newchild = document.createElement("div");
   newchild.className = "expense-item";
-  newchild.innerHTML = `<span>${expense}</span><span>${category}</span><span>${description}</span><button class="change" id="${id}">X</button>`;
+  newchild.innerHTML = `<span>${expense}</span><span>${category}</span><span>${description}</span><button class="changex" id="${id}">X</button>`;
   expenseItems.appendChild(newchild);
   const newexpenseid = document.getElementById(id);
   newexpenseid.addEventListener("click", changeItem);
